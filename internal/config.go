@@ -27,7 +27,7 @@ func NewConfigFromEnv() *Config {
 		RefHeader:           getEnv("WAF_REF_HEADER", ""),
 		ChallengeCookie:     getEnv("WAF_CHALLENGE_COOKIE", "_wafchlp"),
 		ChallengePassage:    getEnvDuration("WAF_CHALLENGE_PASSAGE", "60m"),
-		ChallengeDifficulty: getEnvInt("WAF_CHALLENGE_DIFFICULTY", "20"),
+		ChallengeDifficulty: getEnvInt("WAF_CHALLENGE_DIFFICULTY", "18"),
 		Verbosity:           getEnvInt("WAF_VERBOSITY", "1"),
 		XffCount:            getEnvInt("WAF_XFF_COUNT", "-1"),
 	}
