@@ -4,7 +4,7 @@ ARG TARGETARCH
 
 COPY . .
 
-RUN GOPATH= GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /main .
+RUN GOPATH= GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -tags no_fs_access -o /main .
 
 FROM scratch
 
