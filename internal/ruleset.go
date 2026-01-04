@@ -17,10 +17,8 @@ func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
 	defer tx.Close()
 	defer tx.ProcessLogging()
 
-	// We use sample data because getting the real IP is difficult
-	// due to proxy nesting
-	// TODO: ^ fix above
-	tx.ProcessConnection(i.getRemoteIP(r), 1337, "127.0.0.1", 80)
+	// we cant get the real ports from http.Request
+	tx.ProcessConnection(i.getRemoteIP(r), 0, "", 0)
 
 	tx.ProcessURI(r.URL.String(), r.Method, r.Proto)
 
@@ -30,17 +28,23 @@ func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
 		}
 	}
 
+	host := r.Header.Get("x-forwarded-host")
+	tx.AddRequestHeader("Host", host)
+	tx.SetServerName(host)
+
 	// Phase 1 done (request headers)
 	if it := tx.ProcessRequestHeaders(); it != nil {
 		return it
 	}
 
-	// Phase 2 (request body)
-	if it, _, err := tx.ReadRequestBodyFrom(r.Body); it != nil || err != nil {
-		if it != nil {
-			return it
+	if tx.IsRequestBodyAccessible() && r.Body != nil && r.Body != http.NoBody {
+		// Phase 2 (request body)
+		if it, _, err := tx.ReadRequestBodyFrom(r.Body); it != nil || err != nil {
+			if it != nil {
+				return it
+			}
+			fmt.Printf("error reading request body: %v\n", err)
 		}
-		fmt.Printf("error reading request body: %v\n", err)
 	}
 
 	// We can't process response
