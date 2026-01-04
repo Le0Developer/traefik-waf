@@ -7,7 +7,7 @@ import (
 	"github.com/corazawaf/coraza/v3/types"
 )
 
-func (i *Instance) evaluateRules(r http.Request) *types.Interruption {
+func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
 	if i.engine == nil {
 		return nil
 	}
@@ -20,7 +20,7 @@ func (i *Instance) evaluateRules(r http.Request) *types.Interruption {
 	// We use sample data because getting the real IP is difficult
 	// due to proxy nesting
 	// TODO: ^ fix above
-	tx.ProcessConnection("127.0.0.1", 1337, "127.0.0.1", 80)
+	tx.ProcessConnection(i.getRemoteIP(r), 1337, "127.0.0.1", 80)
 
 	tx.ProcessURI(r.URL.String(), r.Method, r.Proto)
 

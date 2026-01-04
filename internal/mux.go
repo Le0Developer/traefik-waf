@@ -33,7 +33,7 @@ func (i *Instance) Mux() http.Handler {
 			ref = "WAF-" + strconv.FormatInt(time.Now().UnixNano(), 36)
 		}
 
-		if interruption := i.evaluateRules(*r); interruption != nil {
+		if interruption := i.evaluateRules(r); interruption != nil {
 			fmt.Printf("request blocked: ref=%s rule=%d action=%s (ignored)\n", ref, interruption.RuleID, interruption.Action)
 			i.replyWithBlocked(w, r, ref)
 			return
