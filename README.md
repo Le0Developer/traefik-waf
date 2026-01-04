@@ -73,7 +73,7 @@ services:
 		labels:
 			traefik.enable: true
 			traefik.http.services.traefik-waf.loadbalancer.server.port: 8080
-			traefik.http.middlewares.waf.forwardauth.address: http://traefik-waf
+			traefik.http.middlewares.waf.forwardauth.address: http://traefik-waf:8080
 			traefik.http.middlewares.waf.forwardauth.trustForwardHeader: true
 			traefik.http.middlewares.waf-requirejs.headers.customRequestHeaders.x-waf-jsrequired: "1"
 ```
