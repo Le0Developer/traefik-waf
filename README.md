@@ -3,6 +3,11 @@
 A very opinionated Web Application Firewall (WAF) for Traefik and **primarily
 for myself**.
 
+## Demo
+
+You can try out the WAF at https://wafdemo.leodev.xyz. It uses the OWASP Core
+Rule Set (CRS) and has the Javascript challenge enabled.
+
 ## Rules
 
 This WAF uses [Coraza](https://coraza.io/) under the hood and doesn't ship with

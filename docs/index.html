@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.classless.jade.min.css"
+      integrity="sha256-uy1ltDBeVXSaE/PVXPo/KKSLhYTmm6eVoPB12lBXn64="
+      crossorigin="anonymous"
+    />
+    <script
+      src="/.well-known/p/js/script.js"
+      data-api="/.well-known/p/api/event"
+      async
+    ></script>
+    <meta
+      name="robots"
+      content="noindex,nofollow,noarchive"
+    />
+    <title>WAF Demo</title>
+  </head>
+  <body class="container">
+    <header>
+      <h1>WAF Demo</h1>
+    </header>
+    <main>
+      <section>
+        <h2>Try some WAF attack samples</h2>
+
+        <a href="/?q=<script>alert(1)</script>">XSS Attack</a><br />
+        <a href="/?q=union select password from users">SQL Injection Attack</a
+        ><br />
+        <a href="/?q=../../etc/passwd">Directory Traversal Attack</a><br />
+        <a href="/?q=%3Cimg%20src=x%20onerror=alert(1)%3E">XSS Image Attack</a
+        ><br />
+        <a href="/?q=<svg/onload=alert(1)>">XSS SVG Attack</a><br />
+        <a href="/?q=1%3B++cat+/etc/passwd">Command Injection Attack</a><br />
+        <a href="/config.py">Access Restricted File</a><br />
+        <a href="/?q=normal+input">Normal Input (Should Pass)</a><br />
+      </section>
+
+      <section>
+        <h2>Want to try the Javascript Challenge again?</h2>
+        <button>Clear all cookies & reload</button>
+        <script>
+          document.querySelector("button").addEventListener("click", () => {
+            document.cookie
+              .split(";")
+              .map((c) => c.trim())
+              .forEach((cookie) => {
+                document.cookie =
+                  cookie.split("=")[0] +
+                  "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+              });
+            location.reload();
+          });
+        </script>
+      </section>
+    </main>
+    <footer>
+      <nav>
+        <ul>
+          <li>
+            <a href="https://github.com/le0developer/traefik-waf"
+              >GitHub Repository</a
+            >
+          </li>
+        </ul>
+        <ul>
+          <li><a href="https://leodev.xyz">&copy; 2025 LeoDeveloper</a></li>
+        </ul>
+      </nav>
+    </footer>
+  </body>
+</html>
