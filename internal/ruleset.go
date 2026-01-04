@@ -32,6 +32,12 @@ func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
 	tx.AddRequestHeader("Host", host)
 	tx.SetServerName(host)
 
+	for name, values := range r.URL.Query() {
+		for _, value := range values {
+			tx.AddGetRequestArgument(name, value)
+		}
+	}
+
 	// Phase 1 done (request headers)
 	if it := tx.ProcessRequestHeaders(); it != nil {
 		return it
