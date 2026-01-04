@@ -61,3 +61,12 @@ a:hover {
   color: var(--f);
   text-decoration: underline dashed;
 }
+
+@media (max-width: 600px) {
+  .m {
+    display: none;
+  }
+  footer {
+    flex-direction: column;
+  }
+}
