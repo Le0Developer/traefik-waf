@@ -48,7 +48,7 @@ look for:
 
 - `X-Request-ID`
 - `CF-Ray` (Cloudflare)
-- `CDN-Uid` (Bunny.net)
+- `CDN-Requestid` (Bunny.net)
 
 If multiple headers are present, a fallback reference of `unknown` will be used.
 This is to prevent the user from being able to manipulate the reference value by

@@ -19,7 +19,7 @@ func (i *Instance) reference(r *http.Request) string {
 	for _, v := range []string{
 		"X-Request-ID",
 		"CF-Ray",
-		"CDN-Uid",
+		"CDN-RequestID",
 	} {
 		if ref_ := r.Header.Get(v); ref_ != "" {
 			if ref != "" {
