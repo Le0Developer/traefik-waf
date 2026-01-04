@@ -3,6 +3,8 @@ package internal
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 func (i *Instance) Mux() http.Handler {
@@ -26,20 +28,29 @@ func (i *Instance) Mux() http.Handler {
 			r.URL.Path = r.Header.Get("X-Forwarded-Uri")
 		}
 
+		ref := i.reference(r)
+		if ref == "" {
+			ref = "WAF-" + strconv.FormatInt(time.Now().UnixNano(), 36)
+		}
+
 		if interruption := i.evaluateRules(*r); interruption != nil {
-			fmt.Printf("request blocked: %v\n", interruption)
-			i.replyWithBlocked(w, r)
+			fmt.Printf("request blocked: ref=%s rule=%d action=%s (ignored)\n", ref, interruption.RuleID, interruption.Action)
+			i.replyWithBlocked(w, r, ref)
 			return
 		}
 
-		if !i.evaluateJS(r) {
+		if err := i.evaluateJS(r); err != nil {
+			if i.cfg.Verbosity >= 2 {
+				fmt.Printf("JS challenge required: ref=%s reason=%v\n", ref, err)
+			}
+
 			challenge, err := i.generateChallenge(r)
 			if err != nil {
 				fmt.Printf("failed to generate challenge: %v\n", err)
-				i.replyWithPlainBlocked(w, r, '5')
+				i.replyWithPlainBlocked(w, '5', ref)
 				return
 			}
-			i.replyWithChallenge(w, r, i.buildChallengeScript(challenge))
+			i.replyWithChallenge(w, r, i.buildChallengeScript(challenge), ref)
 			return
 		}
 

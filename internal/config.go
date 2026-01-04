@@ -15,6 +15,8 @@ type Config struct {
 	ChallengeCookie     string
 	ChallengePassage    time.Duration
 	ChallengeDifficulty int
+	// 0 = none, 1 = blocks, 2 = blocks and new challenges, 3 = all logs
+	Verbosity int
 }
 
 func NewConfigFromEnv() *Config {
@@ -26,6 +28,7 @@ func NewConfigFromEnv() *Config {
 		ChallengeCookie:     getEnv("WAF_CHALLENGE_COOKIE", "_wafchlp"),
 		ChallengePassage:    getEnvDuration("WAF_CHALLENGE_PASSAGE", "60m"),
 		ChallengeDifficulty: getEnvInt("WAF_CHALLENGE_DIFFICULTY", "20"),
+		Verbosity:           getEnvInt("WAF_VERBOSITY", "1"),
 	}
 }
 

@@ -5,14 +5,9 @@ import (
 	"net/http"
 )
 
-var fallbackReference = "unknown"
-
 func (i *Instance) reference(r *http.Request) string {
 	if i.cfg.RefHeader != "" {
-		if ref := r.Header.Get(i.cfg.RefHeader); ref != "" {
-			return ref
-		}
-		return fallbackReference
+		return r.Header.Get(i.cfg.RefHeader)
 	}
 
 	ref := ""
@@ -23,15 +18,15 @@ func (i *Instance) reference(r *http.Request) string {
 	} {
 		if ref_ := r.Header.Get(v); ref_ != "" {
 			if ref != "" {
-				fmt.Printf("multiple reference values found: %s and %s. falling back", ref, ref_)
-				return fallbackReference
+				if i.cfg.Verbosity >= 3 {
+					fmt.Printf("multiple reference values found: %s and %s. falling back", ref, ref_)
+				}
+
+				return ""
 			}
 			ref = ref_
 		}
 	}
 
-	if ref == "" {
-		return fallbackReference
-	}
 	return ref
 }

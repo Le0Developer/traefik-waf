@@ -18,17 +18,16 @@ import (
 //go:embed challenge.js
 var challengeScriptTemplate string
 
-func (i *Instance) evaluateJS(r *http.Request) bool {
+func (i *Instance) evaluateJS(r *http.Request) error {
 	if !i.requiresJS(r) {
-		return true
+		return nil
 	}
 
 	if err := i.hasValidChallenge(r); err != nil {
-		fmt.Println("did not have previous valid challenge:", err)
-		return false
+		return err
 	}
 
-	return true
+	return nil
 }
 
 func (i *Instance) requiresJS(r *http.Request) bool {

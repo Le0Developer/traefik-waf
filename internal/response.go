@@ -62,44 +62,44 @@ func acceptsHTML(r *http.Request) bool {
 	return false
 }
 
-func addHeaders(w http.ResponseWriter) {
+func addHeaders(w http.ResponseWriter, reference string, action string) {
 	w.Header().Set("Cache-Control", "no-store")
 	// w.Header().Set("Pragma", "no-cache")
+	w.Header().Set("Waf-Ref", reference)
+	if action != "" {
+		w.Header().Set("Waf-Action", action)
+	}
 }
 
-func (i *Instance) replyWithPlainBlocked(w http.ResponseWriter, r *http.Request, tag byte) {
-	reference := i.reference(r)
-	addHeaders(w)
+func (i *Instance) replyWithPlainBlocked(w http.ResponseWriter, reference string, action string) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusForbidden)
-	_, _ = w.Write([]byte("403 ref=" + reference + " tag=" + string(tag) + "\n"))
+	_, _ = w.Write([]byte("403 ref=" + reference + " action=" + action + "\n"))
 }
 
-func (i *Instance) replyWithBlocked(w http.ResponseWriter, r *http.Request) {
+func (i *Instance) replyWithBlocked(w http.ResponseWriter, r *http.Request, reference string) {
+	addHeaders(w, reference, "block")
 	if !acceptsHTML(r) {
-		i.replyWithPlainBlocked(w, r, 'B')
+		i.replyWithPlainBlocked(w, reference, "block")
 		return
 	}
 
-	reference := i.reference(r)
 	response := i.response.getBlockedResponse(reference)
 
-	addHeaders(w)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusForbidden)
 	_, _ = w.Write([]byte(response))
 }
 
-func (i *Instance) replyWithChallenge(w http.ResponseWriter, r *http.Request, challenge string) {
+func (i *Instance) replyWithChallenge(w http.ResponseWriter, r *http.Request, challenge string, reference string) {
+	addHeaders(w, reference, "challenge")
 	if !acceptsHTML(r) {
-		i.replyWithPlainBlocked(w, r, 'C')
+		i.replyWithPlainBlocked(w, reference, "challenge")
 		return
 	}
 
-	reference := i.reference(r)
 	response := i.response.getChallengeResponse(challenge, reference)
 
-	addHeaders(w)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusForbidden)
 	_, _ = w.Write([]byte(response))

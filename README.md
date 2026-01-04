@@ -50,12 +50,26 @@ look for:
 - `CF-Ray` (Cloudflare)
 - `CDN-Requestid` (Bunny.net)
 
-If multiple headers are present, a fallback reference of `unknown` will be used.
-This is to prevent the user from being able to manipulate the reference value by
+If none or multiple headers are present, a WAF reference will be generated. This
+is to prevent the user from being able to manipulate the reference value by
 sending the header themselves.
 
 You can also manually set the header to use by setting the `WAF_REF_HEADER`
-environment variable to the name of the header you want to use.
+environment variable to the name of the header you want to use. You can also set
+the header to an impossible value like `-` to always make the WAF generate a
+reference.
+
+## Logging
+
+By default only WAF blocks are logged to stdout. You can increase the verbosity
+by setting the `WAF_VERBOSITY` environment variable to:
+
+| Level       | Blocks | New Challenges | All Logs |
+| ----------- | ------ | -------------- | -------- |
+| 0           |        |                |          |
+| 1 (default) | ✓      |                |          |
+| 2           | ✓      | ✓              |          |
+| 3           | ✓      | ✓              | ✓        |
 
 ## Usage
 
