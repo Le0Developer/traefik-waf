@@ -47,7 +47,7 @@ func (i *Instance) Mux() http.Handler {
 			challenge, err := i.generateChallenge(r)
 			if err != nil {
 				fmt.Printf("failed to generate challenge: %v\n", err)
-				i.replyWithPlainBlocked(w, '5', ref)
+				i.replyWithPlainBlocked(w, ref, "chl-error")
 				return
 			}
 			i.replyWithChallenge(w, r, i.buildChallengeScript(challenge), ref)
