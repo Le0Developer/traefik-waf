@@ -64,12 +64,14 @@ reference.
 By default only WAF blocks are logged to stdout. You can increase the verbosity
 by setting the `WAF_VERBOSITY` environment variable to:
 
-| Level       | Blocks | New Challenges | All Logs |
-| ----------- | ------ | -------------- | -------- |
-| 0           |        |                |          |
-| 1 (default) | ✓      |                |          |
-| 2           | ✓      | ✓              |          |
-| 3           | ✓      | ✓              | ✓        |
+| Level       | Blocks | New Challenges | Other Logs | Coraza Logs |
+| ----------- | ------ | -------------- | ---------- | ----------- |
+| 0           |        |                |            |             |
+| 1 (default) | ✓      |                |            |             |
+| 2           | ✓      | ✓              |            |             |
+| 3           | ✓      | ✓              | ✓          |             |
+| 4           | ✓      | ✓              | ✓          | ✓           |
+| 5           | ✓      | ✓              | ✓          | ✓ and TRACE |
 
 ## Usage
 
