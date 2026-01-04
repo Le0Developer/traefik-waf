@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/corazawaf/coraza/v3/collection"
+	"github.com/corazawaf/coraza/v3/experimental/plugins/plugintypes"
 	"github.com/corazawaf/coraza/v3/types"
+	"github.com/corazawaf/coraza/v3/types/variables"
 )
 
 func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
@@ -13,9 +16,25 @@ func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
 	}
 
 	tx := i.engine.NewTransaction()
-	//nolint:errcheck
-	defer tx.Close()
-	defer tx.ProcessLogging()
+	defer func() {
+		if i.cfg.Verbosity >= 8 {
+			txState := tx.(plugintypes.TransactionState)
+			txState.Variables().All(func(_ variables.RuleVariable, v collection.Collection) bool {
+				fmt.Println("--- Variable:", v.Name())
+				for _, e := range v.FindAll() {
+					fmt.Printf("    %s: %q\n", e.Key(), e.Value())
+				}
+				return true
+			})
+
+			for _, rule := range tx.MatchedRules() {
+				fmt.Printf("+++ Matched rule: ID=%d Msg=%q\n", rule.Rule().ID(), rule.Message())
+			}
+		}
+
+		tx.ProcessLogging()
+		_ = tx.Close()
+	}()
 
 	// we cant get the real ports from http.Request
 	tx.ProcessConnection(i.getRemoteIP(r), 0, "", 0)
@@ -32,10 +51,8 @@ func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
 	tx.AddRequestHeader("Host", host)
 	tx.SetServerName(host)
 
-	for name, values := range r.URL.Query() {
-		for _, value := range values {
-			tx.AddGetRequestArgument(name, value)
-		}
+	if r.TransferEncoding != nil {
+		tx.AddRequestHeader("Transfer-Encoding", r.TransferEncoding[0])
 	}
 
 	// Phase 1 done (request headers)
