@@ -17,7 +17,7 @@ ruleset.
 
 This WAF includes a Javascript challenge to mitigate bots. It's disabled by by
 default. To enable it, set the environment variable `WAF_ENABLE_JS_CHALLENGE` to
-`true` or set the `x-waf-jsrequired` header to `1` in your requests (e.g. in a
+`true` or set the `x-waf-require-js` header to `1` in your requests (e.g. in a
 traefik middleware).
 
 The challenge page will be served to clients that don't have a valid cookie. The
@@ -89,7 +89,7 @@ services:
 			traefik.http.services.traefik-waf.loadbalancer.server.port: 8080
 			traefik.http.middlewares.waf.forwardauth.address: http://traefik-waf:8080
 			traefik.http.middlewares.waf.forwardauth.trustForwardHeader: true
-			traefik.http.middlewares.waf-requirejs.headers.customRequestHeaders.x-waf-jsrequired: "1"
+			traefik.http.middlewares.waf-requirejs.headers.customRequestHeaders.x-waf-require-js: "1"
 ```
 
 And then use the `waf[@docker]` or `waf-requirejs[@docker]` middleware in your
