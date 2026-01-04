@@ -28,7 +28,7 @@ func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
 			})
 
 			for _, rule := range tx.MatchedRules() {
-				fmt.Printf("+++ Matched rule: ID=%d Msg=%q\n", rule.Rule().ID(), rule.Message())
+				fmt.Printf("+++ Matched rule: ID=%d Msg=%q Log=%q\n", rule.Rule().ID(), rule.Message(), rule.Data())
 			}
 		}
 
@@ -68,6 +68,10 @@ func (i *Instance) evaluateRules(r *http.Request) *types.Interruption {
 			}
 			fmt.Printf("error reading request body: %v\n", err)
 		}
+	}
+
+	if it, err := tx.ProcessRequestBody(); it != nil || err != nil {
+		return it
 	}
 
 	// We can't process response
