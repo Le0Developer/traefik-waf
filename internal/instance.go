@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/corazawaf/coraza/v3"
+	"github.com/corazawaf/coraza/v3/debuglog"
 )
 
 type Instance struct {
@@ -21,6 +22,15 @@ func New(cfg *Config) (*Instance, error) {
 		ccfg := coraza.NewWAFConfig()
 		for path := range strings.SplitSeq(cfg.RuleSetPath, ",") {
 			ccfg = ccfg.WithDirectivesFromFile(strings.TrimSpace(path))
+		}
+		if cfg.Verbosity >= 4 {
+			level := debuglog.LevelDebug
+			if cfg.Verbosity >= 5 {
+				level = debuglog.LevelTrace
+			}
+			ccfg = ccfg.WithDebugLogger(
+				debuglog.Default().WithLevel(level),
+			)
 		}
 		var err error
 		engine, err = coraza.NewWAF(ccfg)

@@ -15,6 +15,7 @@ func (i *Instance) evaluateRules(r http.Request) *types.Interruption {
 	tx := i.engine.NewTransaction()
 	//nolint:errcheck
 	defer tx.Close()
+	defer tx.ProcessLogging()
 
 	// We use sample data because getting the real IP is difficult
 	// due to proxy nesting
