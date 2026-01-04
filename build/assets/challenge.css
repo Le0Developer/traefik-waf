@@ -1,0 +1,39 @@
+@import "./shared.css";
+
+/* v attribute = verified! */
+/* hide all "C"hecking */
+[v] .c {
+  display: none;
+}
+/* show all "V"erified */
+.v {
+  display: none;
+}
+[v] .v {
+  display: block;
+}
+
+/* Checkmark */
+.cm {
+  width: 3rem;
+  height: 6rem;
+  border: solid;
+  border-width: 0 8px 8px 0;
+  transform: rotate(45deg);
+}
+
+/* Loading spinner */
+.s {
+  border: 9px solid;
+  border-color: var(--f) transparent transparent;
+  border-radius: 50%;
+  animation: s 1s linear infinite;
+  width: 6rem;
+  height: 6rem;
+}
+
+@keyframes s {
+  to {
+    transform: rotate(1turn); /* 1turn is a letter shorter than 360deg */
+  }
+}

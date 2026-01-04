@@ -1,0 +1,5 @@
+.env
+.DS_Store
+._*
+traefik-waf
+node_modules

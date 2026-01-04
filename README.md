@@ -1,0 +1,83 @@
+# traefik-waf
+
+A very opinionated Web Application Firewall (WAF) for Traefik and **primarily
+for myself**.
+
+## Rules
+
+This WAF uses [Coraza](https://coraza.io/) under the hood and doesn't ship with
+any rules by default. We recommend making a `rules` directory, filling it with
+the rules from https://coraza.io/docs/tutorials/coreruleset/ and then mounting
+it to `/rules` in the container.
+
+You must pass the environment variable `WAF_RULESET_ENABLED=true` to enable the
+ruleset.
+
+## Javascript Check
+
+This WAF includes a Javascript challenge to mitigate bots. It's disabled by by
+default. To enable it, set the environment variable `WAF_ENABLE_JS_CHALLENGE` to
+`true` or set the `x-waf-jsrequired` header to `1` in your requests (e.g. in a
+traefik middleware).
+
+The challenge page will be served to clients that don't have a valid cookie. The
+challenge is ~3.5kb in size (uncompressed) using the default settings.
+
+The challenge will perform a proof-of-work check in the browser (using
+[jspowobfdata](https://github.com/le0developer/jspowobfdata)).
+
+## Customization
+
+You can customize the blocked page and the challenge page by mounting your own
+HTML files to `/assets/blocked.html` and `/assets/challenge.html` in the
+container.
+
+The `challenge.html` **MUST** include a `<!--CHALLENGE-->` marker where the
+challenge script will be injected.
+
+You can also mount a `/assets/head.html` file which will be injected in the
+`<head>` section of both pages at the `<!--HEAD-->` marker.
+
+### REF
+
+The `<!--REF-->` marker in both HTML files will be replaced with a reference to
+the current request ID for debugging purposes.
+
+We will try to automatically detect this based on incoming request headers. We
+look for:
+
+- `X-Request-ID`
+- `CF-Ray` (Cloudflare)
+- `CDN-Uid` (Bunny.net)
+
+If multiple headers are present, a fallback reference of `unknown` will be used.
+This is to prevent the user from being able to manipulate the reference value by
+sending the header themselves.
+
+You can also manually set the header to use by setting the `WAF_REF_HEADER`
+environment variable to the name of the header you want to use.
+
+## Usage
+
+```yml
+services:
+	traefik-waf:
+		image: ghcr.io/le0developer/traefik-waf:latest
+		environment:
+			- WAF_RULESET_ENABLED=true
+			- WAF_ENABLE_JS_CHALLENGE=true
+			- WAF_REF_HEADER=CF-Ray
+		volumes:
+			- ./rules:/rules:ro
+			- ./assets:/assets:ro
+		labels:
+			traefik.enable: true
+			traefik.http.services.traefik-waf.loadbalancer.server.port: 8080
+			traefik.http.middlewares.waf.forwardauth.address: http://traefik-waf
+			traefik.http.middlewares.waf.forwardauth.trustForwardHeader: true
+			traefik.http.middlewares.waf-requirejs.headers.customRequestHeaders.x-waf-jsrequired: "1"
+```
+
+And then use the `waf[@docker]` or `waf-requirejs[@docker]` middleware in your
+routers (if y ou use `waf-requirejs`, it must be listed before the `waf`
+middleware).
