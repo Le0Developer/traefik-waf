@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -25,7 +26,14 @@ func (i *Instance) Mux() http.Handler {
 			r.URL.Scheme = "http"
 		}
 		if r.Header.Get("X-Forwarded-Uri") != "" {
-			r.URL.Path = r.Header.Get("X-Forwarded-Uri")
+			uri := r.Header.Get("X-Forwarded-Uri")
+			parsed, err := url.Parse(uri)
+			if err != nil {
+				fmt.Printf("failed to parse X-Forwarded-Uri: %v\n", err)
+			} else {
+				r.URL.Path = parsed.Path
+				r.URL.RawQuery = parsed.RawQuery
+			}
 		}
 
 		ref := i.reference(r)
