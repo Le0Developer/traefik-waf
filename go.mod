@@ -1,6 +1,6 @@
 module github.com/le0developer/traefik-waf
 
-go 1.25.4
+go 1.24
 
 require (
 	github.com/corazawaf/coraza/v3 v3.3.3 // indirect
