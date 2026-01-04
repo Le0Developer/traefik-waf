@@ -22,6 +22,9 @@ func (i *Instance) Mux() http.Handler {
 		} else {
 			r.URL.Scheme = "http"
 		}
+		if r.Header.Get("X-Forwarded-Uri") != "" {
+			r.URL.Path = r.Header.Get("X-Forwarded-Uri")
+		}
 
 		if interruption := i.evaluateRules(*r); interruption != nil {
 			fmt.Printf("request blocked: %v\n", interruption)
