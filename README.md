@@ -15,7 +15,7 @@ ruleset.
 
 ## Javascript Check
 
-This WAF includes a Javascript challenge to mitigate bots. It's disabled by by
+This WAF includes a Javascript challenge to mitigate bots. It's disabled by
 default. To enable it, set the environment variable `WAF_ENABLE_JS_CHALLENGE` to
 `true` or set the `x-waf-require-js` header to `1` in your requests (e.g. in a
 traefik middleware).
