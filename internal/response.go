@@ -18,17 +18,27 @@ type responseTemplater struct {
 	blocked   string
 	challenge string
 	head      string
+
+	config *Config
+}
+
+func (rt *responseTemplater) getBasic(html string) string {
+	html = strings.Replace(html, "<!--HEAD-->", rt.head, 1)
+	html = strings.ReplaceAll(html, "{{WAF_NAME}}", rt.config.WafName)
+	html = strings.ReplaceAll(html, "{{FOOTER_NAME}}", rt.config.FooterName)
+	html = strings.ReplaceAll(html, "{{FOOTER_URL}}", rt.config.FooterUrl)
+	return html
 }
 
 func (rt *responseTemplater) getBlockedResponse(reference string) string {
-	return strings.Replace(strings.Replace(rt.blocked, "<!--HEAD-->", rt.head, 1), "<!--REF-->", html.EscapeString(reference), 1)
+	return strings.Replace(rt.getBasic(rt.blocked), "<!--REF-->", html.EscapeString(reference), 1)
 }
 
 func (rt *responseTemplater) getChallengeResponse(challenge string, reference string) string {
-	return strings.Replace(strings.Replace(strings.Replace(rt.challenge, "<!--HEAD-->", rt.head, 1), "<!--CHALLENGE-->", challenge, 1), "<!--REF-->", html.EscapeString(reference), 1)
+	return strings.Replace(strings.Replace(rt.getBasic(rt.challenge), "<!--CHALLENGE-->", challenge, 1), "<!--REF-->", html.EscapeString(reference), 1)
 }
 
-func newResponseTemplater() *responseTemplater {
+func newResponseTemplater(cfg *Config) *responseTemplater {
 	blocked := blockedTemplate
 	challenge := challengeTemplate
 	head := ""
@@ -47,6 +57,7 @@ func newResponseTemplater() *responseTemplater {
 		blocked:   blocked,
 		challenge: challenge,
 		head:      head,
+		config:    cfg,
 	}
 }
 

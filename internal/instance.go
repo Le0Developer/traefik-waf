@@ -42,7 +42,7 @@ func New(cfg *Config) (*Instance, error) {
 	secret := make([]byte, 32)
 	_, _ = rand.Read(secret)
 
-	response := newResponseTemplater()
+	response := newResponseTemplater(cfg)
 
 	return &Instance{cfg: cfg, engine: engine, response: response, secret: secret}, nil
 }

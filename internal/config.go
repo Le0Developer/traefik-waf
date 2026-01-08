@@ -18,6 +18,9 @@ type Config struct {
 	ChallengeDifficulty int
 	Verbosity           int
 	XffCount            int
+	FooterName          string
+	FooterUrl           string
+	WafName             string
 }
 
 func NewConfigFromEnv() *Config {
@@ -32,6 +35,9 @@ func NewConfigFromEnv() *Config {
 		ChallengeDifficulty: getEnvInt("WAF_CHALLENGE_DIFFICULTY", "18"),
 		Verbosity:           getEnvInt("WAF_VERBOSITY", "1"),
 		XffCount:            getEnvInt("WAF_XFF_COUNT", "-1"),
+		FooterName:          getEnv("WAF_FOOTER_NAME", "Web Application Firewall"),
+		FooterUrl:           getEnv("WAF_FOOTER_NAME", "https://github.com/le0developer/traefik-waf"),
+		WafName:             getEnv("WAF_NAME", "Web Application Firewall"),
 	}
 }
 
