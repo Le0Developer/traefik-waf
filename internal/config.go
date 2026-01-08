@@ -11,6 +11,7 @@ type Config struct {
 	RuleSetEnabled      bool
 	RuleSetPath         string
 	RequireJS           bool
+	AssetPath           string
 	RefHeader           string
 	ChallengeCookie     string
 	ChallengePassage    time.Duration
@@ -24,6 +25,7 @@ func NewConfigFromEnv() *Config {
 		RuleSetEnabled:      getEnv("WAF_RULESET_ENABLED", "true") == "true",
 		RuleSetPath:         getEnv("WAF_RULESET_PATH", "/rules/*.conf,/rules/*/*.conf,/rules/*/*/*.conf,/rules/*/*/*/*.conf"),
 		RequireJS:           getEnv("WAF_REQUIRE_JS", "false") == "true",
+		AssetPath:           getEnv("WAF_ASSET_PATH", "/.waf"),
 		RefHeader:           getEnv("WAF_REF_HEADER", ""),
 		ChallengeCookie:     getEnv("WAF_CHALLENGE_COOKIE", "_wafchlp"),
 		ChallengePassage:    getEnvDuration("WAF_CHALLENGE_PASSAGE", "60m"),

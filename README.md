@@ -93,6 +93,10 @@ services:
 			- ./assets:/assets:ro
 		labels:
 			traefik.enable: true
+			traefik.http.routers.traefik-waf.rule: PathPrefix(`/.waf`)
+			traefik.http.routers.traefik-waf.middlewares: waf-replace-assets@docker
+			traefik.http.middlewares.waf-replace-assets.replacepathregex.regex: ^/\.waf/(.*)
+			traefik.http.middlewares.waf-replace-assets.replacepathregex.replacement: /assets/$1
 			traefik.http.services.traefik-waf.loadbalancer.server.port: 8080
 			traefik.http.middlewares.waf.forwardauth.address: http://traefik-waf:8080
 			traefik.http.middlewares.waf.forwardauth.trustForwardHeader: true

@@ -10,6 +10,17 @@ import (
 
 func (i *Instance) Mux() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/healthz":
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("ok"))
+			return
+		case "/assets/w.wasm":
+			w.Header().Set("Content-Type", "application/wasm")
+			w.WriteHeader(http.StatusOK)
+			w.Write(wasmData)
+			return
+		}
 
 		if r.Header.Get("X-Forwarded-Host") != "" {
 			host := r.Header.Get("X-Forwarded-Host")
