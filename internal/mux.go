@@ -13,12 +13,12 @@ func (i *Instance) Mux() http.Handler {
 		switch r.URL.Path {
 		case "/healthz":
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("ok"))
+			_, _ = w.Write([]byte("ok"))
 			return
 		case "/assets/w.wasm":
 			w.Header().Set("Content-Type", "application/wasm")
 			w.WriteHeader(http.StatusOK)
-			w.Write(wasmData)
+			_, _ = w.Write(wasmData)
 			return
 		}
 
