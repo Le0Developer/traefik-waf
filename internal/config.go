@@ -36,7 +36,7 @@ func NewConfigFromEnv() *Config {
 		Verbosity:           getEnvInt("WAF_VERBOSITY", "1"),
 		XffCount:            getEnvInt("WAF_XFF_COUNT", "-1"),
 		FooterName:          getEnv("WAF_FOOTER_NAME", "Web Application Firewall"),
-		FooterUrl:           getEnv("WAF_FOOTER_NAME", "https://github.com/le0developer/traefik-waf"),
+		FooterUrl:           getEnv("WAF_FOOTER_URL", "https://github.com/le0developer/traefik-waf"),
 		WafName:             getEnv("WAF_NAME", "Web Application Firewall"),
 	}
 }
