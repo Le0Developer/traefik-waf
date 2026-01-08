@@ -21,9 +21,9 @@ ruleset.
 ## Javascript Check
 
 This WAF includes a Javascript challenge to mitigate bots. It's disabled by
-default. To enable it, set the environment variable `WAF_ENABLE_JS_CHALLENGE` to
-`true` or set the `x-waf-require-js` header to `1` in your requests (e.g. in a
-traefik middleware).
+default. To enable it, set the environment variable `WAF_REQUIREJS` to `true` or
+set the `x-waf-require-js` header to `1` in your requests (e.g. in a traefik
+middleware).
 
 The challenge page will be served to clients that don't have a valid cookie. The
 challenge is ~3.5kb in size (uncompressed) using the default settings.
@@ -86,7 +86,7 @@ services:
 		image: ghcr.io/le0developer/traefik-waf:latest
 		environment:
 			- WAF_RULESET_ENABLED=true
-			- WAF_ENABLE_JS_CHALLENGE=true
+			- WAF_REQUIREJS=true
 			- WAF_REF_HEADER=CF-Ray
 		volumes:
 			- ./rules:/rules:ro
