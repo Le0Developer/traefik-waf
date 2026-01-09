@@ -1,5 +1,15 @@
 @import "./shared.css";
 
+:root {
+  --r: #ff0000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --r: #ff4d4d;
+  }
+}
+
 /* v attribute = verified! */
 /* hide all "C"hecking */
 [v] .c {
@@ -11,6 +21,16 @@
 }
 [v] .v {
   display: block;
+}
+
+noscript,
+.e {
+  color: var(--r);
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: 1px dashed var(--r);
+  padding: 1rem;
+  margin-top: 2rem;
 }
 
 /* Checkmark */
