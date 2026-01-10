@@ -53,7 +53,7 @@ func (i *Instance) Mux() http.Handler {
 		}
 
 		if interruption := i.evaluateRules(r); interruption != nil {
-			fmt.Printf("request blocked: ref=%s rule=%d action=%s (ignored)\n", ref, interruption.RuleID, interruption.Action)
+			fmt.Printf("request blocked: ref=%s rule=%d action=%s\n", ref, interruption.RuleID, interruption.Action)
 			i.replyWithBlocked(w, r, ref)
 			return
 		}
