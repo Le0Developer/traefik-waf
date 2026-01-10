@@ -1,4 +1,4 @@
-// MODERN=1 SKEW_EXTRA_OPTIONS="--define:decrypt.wasm.DEFAULT_WASM_URL='{{ASSETS}}/w.wasm' --define:WEBLIB_EXPORT_NAME='solve'" make all
+// MODERN=1 SKEW_EXTRA_OPTIONS="--define:decrypt.wasm.DEFAULT_WASM_URL='{{ASSETS}}/w.wasm' --define:WEBLIB_EXPORT_NAME='solve' --define:WORKER_SCALING=true" make all
 // cat dist/weblib.js | pbcopy
 addEventListener("DOMContentLoaded", function () {
   if (!navigator.cookieEnabled)
