@@ -29,7 +29,7 @@ noscript,
   font-size: 1.5rem;
   font-weight: bold;
   border: 1px dashed var(--r);
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   margin-top: 2rem;
 }
 
