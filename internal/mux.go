@@ -17,6 +17,7 @@ func (i *Instance) Mux() http.Handler {
 			return
 		case "/assets/w.wasm":
 			w.Header().Set("Content-Type", "application/wasm")
+			w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
 			w.WriteHeader(http.StatusOK)
 			_, _ = w.Write(wasmData)
 			return
