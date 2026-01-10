@@ -125,7 +125,6 @@ func (i *Instance) buildChallengeScript(challenge string) string {
 	script := strings.ReplaceAll(challengeScriptTemplate, "{{CHALLENGE}}", challenge)
 	script = strings.ReplaceAll(script, "{{COOKIE_NAME}}", i.cfg.ChallengeCookie)
 	script = strings.ReplaceAll(script, "{{PASSAGE_DURATION}}", fmt.Sprintf("%d", int(i.cfg.ChallengePassage.Seconds())))
-	script = strings.ReplaceAll(script, "{{ASSETS}}", i.cfg.AssetPath)
 	return "<script>" + script + "</script>"
 }
 
