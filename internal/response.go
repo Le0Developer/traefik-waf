@@ -50,6 +50,9 @@ func newResponseTemplater(cfg *Config) *responseTemplater {
 
 		blocked = strings.Replace(blocked, "<!--HEAD-->", head, 1)
 		challenge = strings.Replace(challenge, "<!--HEAD-->", head, 1)
+	} else {
+		blocked = strings.Replace(blocked, "<!--HEAD-->", "", 1)
+		challenge = strings.Replace(challenge, "<!--HEAD-->", "", 1)
 	}
 
 	return &responseTemplater{
