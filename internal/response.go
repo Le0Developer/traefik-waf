@@ -17,47 +17,44 @@ var challengeTemplate string
 type responseTemplater struct {
 	blocked   string
 	challenge string
-	head      string
-
-	config *Config
-}
-
-func (rt *responseTemplater) getBasic(html string) string {
-	html = strings.Replace(html, "<!--HEAD-->", rt.head, 1)
-	html = strings.ReplaceAll(html, "{{WAF_NAME}}", rt.config.WafName)
-	html = strings.ReplaceAll(html, "{{FOOTER_NAME}}", rt.config.FooterName)
-	html = strings.ReplaceAll(html, "{{FOOTER_URL}}", rt.config.FooterUrl)
-	return html
 }
 
 func (rt *responseTemplater) getBlockedResponse(reference string) string {
-	return strings.Replace(rt.getBasic(rt.blocked), "<!--REF-->", html.EscapeString(reference), 1)
+	return strings.Replace(rt.blocked, "<!--REF-->", html.EscapeString(reference), 1)
 }
 
 func (rt *responseTemplater) getChallengeResponse(challenge string, reference string) string {
-	return strings.Replace(strings.Replace(rt.getBasic(rt.challenge), "<!--CHALLENGE-->", challenge, 1), "<!--REF-->", html.EscapeString(reference), 1)
+	return strings.Replace(strings.Replace(rt.challenge, "<!--CHALLENGE-->", challenge, 1), "<!--REF-->", html.EscapeString(reference), 1)
 }
 
 func newResponseTemplater(cfg *Config) *responseTemplater {
 	blocked := blockedTemplate
 	challenge := challengeTemplate
-	head := ""
 
 	if customBlocked, _ := os.ReadFile("/custom/blocked.html"); customBlocked != nil {
 		blocked = string(customBlocked)
+
+		blocked = strings.ReplaceAll(blocked, "{{WAF_NAME}}", cfg.WafName)
+		blocked = strings.ReplaceAll(blocked, "{{FOOTER_NAME}}", cfg.FooterName)
+		blocked = strings.ReplaceAll(blocked, "{{FOOTER_URL}}", cfg.FooterUrl)
 	}
 	if customChallenge, _ := os.ReadFile("/custom/challenge.html"); customChallenge != nil {
 		challenge = string(customChallenge)
+
+		challenge = strings.ReplaceAll(challenge, "{{WAF_NAME}}", cfg.WafName)
+		challenge = strings.ReplaceAll(challenge, "{{FOOTER_NAME}}", cfg.FooterName)
+		challenge = strings.ReplaceAll(challenge, "{{FOOTER_URL}}", cfg.FooterUrl)
 	}
 	if customHead, _ := os.ReadFile("/custom/head.html"); customHead != nil {
-		head = string(customHead)
+		head := string(customHead)
+
+		blocked = strings.Replace(blocked, "<!--HEAD-->", head, 1)
+		challenge = strings.Replace(challenge, "<!--HEAD-->", head, 1)
 	}
 
 	return &responseTemplater{
 		blocked:   blocked,
 		challenge: challenge,
-		head:      head,
-		config:    cfg,
 	}
 }
 
