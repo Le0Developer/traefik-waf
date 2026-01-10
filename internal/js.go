@@ -18,9 +18,6 @@ import (
 //go:embed challenge.js
 var challengeScriptTemplate string
 
-//go:embed jspowobfdata.js
-var challengePowLib string
-
 //go:embed jspowobfdata.wasm
 var wasmData []byte
 
@@ -129,7 +126,7 @@ func (i *Instance) buildChallengeScript(challenge string) string {
 	script = strings.ReplaceAll(script, "{{COOKIE_NAME}}", i.cfg.ChallengeCookie)
 	script = strings.ReplaceAll(script, "{{PASSAGE_DURATION}}", fmt.Sprintf("%d", int(i.cfg.ChallengePassage.Seconds())))
 	script = strings.ReplaceAll(script, "{{ASSETS}}", i.cfg.AssetPath)
-	return "<script>" + challengePowLib + "</script><script>" + script + "</script>"
+	return "<script>" + script + "</script>"
 }
 
 func (i *Instance) challengeSubkeyFor(r *http.Request) []byte {

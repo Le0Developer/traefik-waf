@@ -14,6 +14,9 @@ var blockedTemplate string
 //go:embed challenge.html
 var challengeTemplate string
 
+//go:embed jspowobfdata.js
+var challengePowLib string
+
 type responseTemplater struct {
 	blocked   string
 	challenge string
@@ -44,6 +47,8 @@ func newResponseTemplater(cfg *Config) *responseTemplater {
 	challenge = strings.ReplaceAll(challenge, "{{WAF_NAME}}", cfg.WafName)
 	challenge = strings.ReplaceAll(challenge, "{{FOOTER_NAME}}", cfg.FooterName)
 	challenge = strings.ReplaceAll(challenge, "{{FOOTER_URL}}", cfg.FooterUrl)
+
+	challenge = strings.ReplaceAll(challenge, "<!--CHALLENGE-->", challengePowLib+"<!--CHALLENGE-->")
 
 	if customHead, _ := os.ReadFile("/custom/head.html"); customHead != nil {
 		head := string(customHead)
