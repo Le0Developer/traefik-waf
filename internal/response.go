@@ -33,18 +33,18 @@ func newResponseTemplater(cfg *Config) *responseTemplater {
 
 	if customBlocked, _ := os.ReadFile("/custom/blocked.html"); customBlocked != nil {
 		blocked = string(customBlocked)
-
-		blocked = strings.ReplaceAll(blocked, "{{WAF_NAME}}", cfg.WafName)
-		blocked = strings.ReplaceAll(blocked, "{{FOOTER_NAME}}", cfg.FooterName)
-		blocked = strings.ReplaceAll(blocked, "{{FOOTER_URL}}", cfg.FooterUrl)
 	}
+	blocked = strings.ReplaceAll(blocked, "{{WAF_NAME}}", cfg.WafName)
+	blocked = strings.ReplaceAll(blocked, "{{FOOTER_NAME}}", cfg.FooterName)
+	blocked = strings.ReplaceAll(blocked, "{{FOOTER_URL}}", cfg.FooterUrl)
+
 	if customChallenge, _ := os.ReadFile("/custom/challenge.html"); customChallenge != nil {
 		challenge = string(customChallenge)
-
-		challenge = strings.ReplaceAll(challenge, "{{WAF_NAME}}", cfg.WafName)
-		challenge = strings.ReplaceAll(challenge, "{{FOOTER_NAME}}", cfg.FooterName)
-		challenge = strings.ReplaceAll(challenge, "{{FOOTER_URL}}", cfg.FooterUrl)
 	}
+	challenge = strings.ReplaceAll(challenge, "{{WAF_NAME}}", cfg.WafName)
+	challenge = strings.ReplaceAll(challenge, "{{FOOTER_NAME}}", cfg.FooterName)
+	challenge = strings.ReplaceAll(challenge, "{{FOOTER_URL}}", cfg.FooterUrl)
+
 	if customHead, _ := os.ReadFile("/custom/head.html"); customHead != nil {
 		head := string(customHead)
 
