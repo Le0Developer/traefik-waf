@@ -33,15 +33,30 @@ The challenge will perform a proof-of-work check in the browser (using
 
 ## Customization
 
+### Partial customization
+
+You can customize parts of the default challenge/blocked pages.
+
+You can set the following environment variables to customize the pages:
+
+| Environment Variable | Description                   | Default Value            |
+| -------------------- | ----------------------------- | ------------------------ |
+| WAF_NAME             | Name of the WAF               | Web Application Firewall |
+| WAF_FOOTER_NAME      | Name shown in the footer      | Web Application Firewall |
+| WAF_FOOTER_URL       | URL linked in the footer name | This Github repository   |
+
+You can also insert your own HTML into the `<head>` section of both pages by
+mounting a file to `/assets/head.html` in the container. This can be used for
+adding custom styles, meta tags or analytics scripts.
+
+### Full customization
+
 You can customize the blocked page and the challenge page by mounting your own
 HTML files to `/assets/blocked.html` and `/assets/challenge.html` in the
 container.
 
 The `challenge.html` **MUST** include a `<!--CHALLENGE-->` marker where the
 challenge script will be injected.
-
-You can also mount a `/assets/head.html` file which will be injected in the
-`<head>` section of both pages at the `<!--HEAD-->` marker.
 
 ### REF
 
