@@ -68,6 +68,7 @@ func (i *Instance) Mux() http.Handler {
 			challenge, err := i.generateChallenge(r)
 			if err != nil {
 				fmt.Printf("failed to generate challenge: %v\n", err)
+				addHeaders(w, ref, "challenge")
 				i.replyWithPlainBlocked(w, ref, "chl-error")
 				return
 			}
